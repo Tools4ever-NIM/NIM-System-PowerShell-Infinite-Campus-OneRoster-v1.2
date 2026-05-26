@@ -2428,6 +2428,7 @@ function Get-ReadCache {
         $cache = $plainText | ConvertFrom-Json
 
         if ([datetime]$cache.expiresAt -le [datetime]::Now) { return $null }
+        Log verbose "Cache for $ReadFunctionName was created at $($cache.createdAt) and expires at $($cache.expiresAt)."
         return $cache
     } catch {
         Log warning "Ignoring unreadable cache for $ReadFunctionName. $_"
@@ -2452,6 +2453,7 @@ function Set-ReadCache {
     $plainText = $cache | ConvertTo-Json -Depth 25
     $protectedText = Protect-ReadCacheContent -PlainText $plainText
     Set-Content -LiteralPath $cachePath -Value $protectedText -Encoding UTF8
+    Log verbose "Cache for $ReadFunctionName was created at $($cache.createdAt) and expires at $($cache.expiresAt)."
 }
 
 function Merge-ReadDataBySourcedId {
